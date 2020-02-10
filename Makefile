@@ -1,16 +1,19 @@
 CC = gcc
-CFLAGS = -g -Wall -Werror -lm
+CFLAGS =-g -Wall -Werror
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
-EXE = entropie
+EXE = entropie Huffman
 
 all: $(EXE)
 
-%.o = %.c
+%.o : %.c
 	$(CC) $(CFLAGS) -c $<
 
-entropie : $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+entropie : entropie.o
+	$(CC) $(CFLAGS) -o $@ $^ -lm
+
+Huffman : Huffman.o
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 .PHONY : clean
 
