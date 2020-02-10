@@ -4,7 +4,7 @@
 int main(int argc, char** argv){
     FILE *src;
     if(argc<2){
-        printf("Syntaxe : ./%s [fichier contenant les proba]\n",argv[0]);
+        printf("Syntaxe : %s [fichier contenant les proba]\n",argv[0]);
         return EXIT_FAILURE;
     }
     src = fopen(argv[1],"r");
@@ -20,15 +20,21 @@ int main(int argc, char** argv){
         printf("ERREUR\n");
         return EXIT_FAILURE;
     }
-    int* tab[nb];
+    float tab[nb];
     while(res!=EOF){
-        res = fscanf(src,"%d",&nb[i]);
-        i++;
+        res = fscanf(src,"%f",&tab[i]);
+        if(res!=EOF){
+            i++;
+        }
     }
     if(i!=nb){
         printf("Nombre de symbole éroné\n");
         return EXIT_FAILURE;
     }
-    printf("Voici vos probabilité : %s\n",tab);
+    printf("Voici vos probabilité : \n");
+    for(int i=0;i<nb;i++){
+        printf("%.2f | ",tab[i]);
+    }
+    printf("\n");
     return EXIT_SUCCESS;
 }
