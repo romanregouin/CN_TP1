@@ -84,5 +84,5 @@ void print_table(tabsymbole tab){
 }
 
 double data_compression(char* msg, int nb){
-    
+    return 3.1;
 }
