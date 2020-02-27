@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS =-g -Wall -Werror
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
-EXE = entropie Huffman
+EXE = entropie Huffman arithmetic_encoding
 
 all: $(EXE)
 
@@ -15,7 +15,12 @@ entropie : entropie.o
 Huffman : Huffman.o fap.o arbrebin.o
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 
+arithmetic_encoding : arithmetic_encoding.o
+	$(CC) $(CFLAGS) -o $@ $^ -lm
+
 .PHONY : clean
+
+arithmetic_encoding.o : arithmetic_encoding.h
 
 clean:
 	rm -f $(EXE) $(OBJ)
