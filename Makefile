@@ -12,7 +12,7 @@ all: $(EXE)
 entropie : entropie.o
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 
-Huffman : Huffman.o
+Huffman : Huffman.o fap.o arbrebin.o
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 .PHONY : clean
