@@ -3,10 +3,9 @@
 
 typedef struct noeud
 {
-    struct noeud *fgauche;
-    struct noeud *fdroite;
+    struct noeud *fgauche,*fdroite;
     int elem;
-} *arbre;
+} noeud, *arbre;
 
 
 
@@ -42,32 +41,5 @@ int main(int argc, char** argv){
         printf("Nombre de symbole éroné\n");
         return EXIT_FAILURE;
     }
-    float tab2[nb];
-    float tmp=0;
-    int nb2=0;
-    arbre a;
-    float min1=-1,min2=-2;
-    arbre* tab3[nb];
-    a=malloc(sizeof(struct noeud));
-    a->fgauche=malloc(sizeof(struct noeud));
-    a->fdroite=malloc(sizeof(struct noeud));
-    nb--;
-    tmp=tab[nb];
-    a->fgauche->elem=tab[nb];
-    a->fgauche->fgauche=NULL;
-    a->fgauche->fdroite=NULL;
-    nb--;
-    tmp+=tab[nb];
-    a->fdroite->elem=tab[nb];
-    a->fdroite->fgauche=NULL;
-    a->fdroite->fdroite=NULL;
-    tab2[nb2]=tmp;
-    tab3[nb2]=a;
-    while(nb>0){
-
-    }
-
-
-    free(tab);
-    free(tab2);
+    
 }

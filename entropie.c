@@ -3,7 +3,7 @@
 #include <math.h>
 
 //suppose que les proba donnée sont correcte et conforme au format attendu : 1 entier sur une ligne qui indique le nb de proba puis une proba en float
-//sur chaque ligne avec des probas qui sont supposé correcte c-a-d somme des proba = 1 avec proba<1
+//sur chaque ligne
 int main(int argc, char** argv){
     FILE *src;
     if(argc<2){
@@ -34,15 +34,22 @@ int main(int argc, char** argv){
         printf("Nombre de symbole éroné\n");
         return EXIT_FAILURE;
     }
-    float somme = 0.00;
+    float somme = 0;
+    float epsilon = 0.001;
+    float somme_entropie = 0.00;
     float entropie = 0.00;
     printf("Voici vos probabilité : \n");
     for(int i=0;i<nb;i++){
         printf("%.2f | ",tab[i]);
-        somme += tab[i]*log2f(tab[i]);
+        somme_entropie += tab[i]*log2f(tab[i]);
+        somme += tab[i];
+    }
+    if(!((somme<=(float)1+epsilon)&&(somme>=(float)1-epsilon))){
+        printf("La somme des proba doit être 1 \n");
+        return EXIT_FAILURE;
     }
     printf("\n");
-    entropie = -somme;
+    entropie = -somme_entropie;
     printf("Voici l'entropie : %.2f\n",entropie);
 
     return EXIT_SUCCESS;
