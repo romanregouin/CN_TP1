@@ -3,7 +3,11 @@
 #include "arithmetic_encoding.h"
 
 int main(int argc, char** argv){
+    if(argc!=4){
+        printf("Syntaxe : %s [nbletters] [message] [messageencoded]\n",argv[0]);
+    }
     int nb = atoi(argv[1]);
+    double tobedecoded = atof(argv[3]);
     int nb_letters = nb_diffrent_letters(nb,argv[2]);
     tabsymbole tab = create_table(nb, nb_letters,argv[2]);
     print_table(tab);
@@ -11,6 +15,8 @@ int main(int argc, char** argv){
     printf("La valeur du message comprésé est : %lf\n",Vmsg);
     char* msg = data_decompression(Vmsg,nb,tab);
     printf("Le message décodé est : %s\n",msg);
+    char* msgdecoded = data_decompression(tobedecoded,nb,tab);
+    printf("Le message %lf décodé est : %s\n",tobedecoded,msgdecoded);
     return EXIT_SUCCESS;
 }
 
