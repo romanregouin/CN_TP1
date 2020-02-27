@@ -17,4 +17,10 @@ tabsymbole create_table(int nb, int nb_letters_diff, char* str);
 
 void print_table(tabsymbole tab);
 
-double data_compression(char* msg, int nb);
+int find_pos_letter(tabsymbole tab, char letter);
+
+double data_compression(char* msg, int nb, tabsymbole tab);
+
+char* data_decompression(double Vmsg, int nb, tabsymbole tab);
+
+char find_letter(double V, tabsymbole tab);
