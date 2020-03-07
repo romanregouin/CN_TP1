@@ -37,6 +37,7 @@
 *.hex
 entropie
 Huffman
+arithmetic_encoding
 
 # Debug files
 *.dSYM/
