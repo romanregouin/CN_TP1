@@ -20,7 +20,8 @@ int main(int argc, char** argv){
     int i =0;
     res = fscanf(src,"%d",&nb);
     if(res!=1){
-        printf("ERREUR\n");
+        printf("ERREUR lecture entier\n");
+        fclose(src);
         return EXIT_FAILURE;
     }
     float tab[nb];
@@ -32,8 +33,10 @@ int main(int argc, char** argv){
     }
     if(i!=nb){
         printf("Nombre de symbole éroné\n");
+        fclose(src);
         return EXIT_FAILURE;
     }
+    fclose(src);
     float somme = 0;
     float epsilon = 0.001;
     float somme_entropie = 0.00;
@@ -44,6 +47,7 @@ int main(int argc, char** argv){
         somme_entropie += tab[i]*log2f(tab[i]);
         somme += tab[i];
     }
+    //Verif que la somme des probas soit 1
     if(!((somme<=(float)1+epsilon)&&(somme>=(float)1-epsilon))){
         printf("La somme des proba doit être 1 \n");
         return EXIT_FAILURE;
@@ -51,6 +55,5 @@ int main(int argc, char** argv){
     printf("\n");
     entropie = -somme_entropie;
     printf("Voici l'entropie : %.2f\n",entropie);
-
     return EXIT_SUCCESS;
 }
