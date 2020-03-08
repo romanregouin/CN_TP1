@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fap.h"
-#include "arbrebin.h"
+#include "arbre.h"
 
 
-struct code_char {
-    int lg;
+struct code {
+    int longueur;
     int code[30]; /* ne contient que des 0 ou des 1 */
 };
 
@@ -20,31 +20,6 @@ int power(int a,int n){
 
 
 
-/*
- 
-fap InitHuffman(TableOcc_t *TableOcc) {
-    int min=1;
-    int max=0;
-    fap f=creer_fap_vide();
-    for(int k=0;k<256;k++){
-        if(max<TableOcc->tab[k])max=TableOcc->tab[k];
-    }
-    int max2;
-    Arbre element;
-    for(int i=0;min<=max;i++){
-        max2=max;
-        if(min==max)max--;
-        for(int j=0;j<256;j++){
-            if(min==TableOcc->tab[j]){
-                element=NouveauNoeud(NULL,j,NULL);
-                f=inserer(f,element,min);
-            }
-            if(min<TableOcc->tab[j] && max2>=TableOcc->tab[j])max2=TableOcc->tab[j];
-        }
-        min=max2;
-    }
-    return f;
-}*/
 
 fap InitHuffman(float* tab,long int nb) {
     fap f=creer_fap_vide();
@@ -81,80 +56,67 @@ Arbre ConstruireArbre(fap file) {
 
 
 
-void ParcoursArbre(Arbre huff,int pos,int* code,float* tab,struct code_char HuffmanCode[]){
+void ParcoursArbre(Arbre huff,int pos,int* code,float* tab,struct code Codehuffman[]){
     if(!EstVide(FilsGauche(huff))){
         code[pos]=0;
-        ParcoursArbre(FilsGauche(huff),pos+1,code,tab,HuffmanCode);
+        ParcoursArbre(FilsGauche(huff),pos+1,code,tab,Codehuffman);
     }if(!EstVide(FilsDroit(huff))){
         code[pos]=1;
-        ParcoursArbre(FilsDroit(huff),pos+1,code,tab,HuffmanCode);
+        ParcoursArbre(FilsDroit(huff),pos+1,code,tab,Codehuffman);
     }
     Element e=Etiq(huff);
     if(e>0 && tab[e-1]>0 && pos!=0){
-        HuffmanCode[e].lg=pos;
+        Codehuffman[e].longueur=pos;
         for(int i=0;i<pos;i++){
-            HuffmanCode[e].code[i]=code[i];
+            Codehuffman[e].code[i]=code[i];
         }
     }
 }
 
 
-void ConstruireCode(Arbre huff,float* tab,struct code_char HuffmanCode[]){
+void ConstruireCode(Arbre huff,float* tab,struct code Codehuffman[]){
     int code[50];
     if(huff!=NULL){
         if(EstVide(FilsGauche(huff)) && EstVide(FilsDroit(huff))){
-            HuffmanCode[Etiq(huff)].lg=1;
-            HuffmanCode[Etiq(huff)].code[0]=0;
-        }else ParcoursArbre(huff,0,code,tab,HuffmanCode);
+            Codehuffman[Etiq(huff)].longueur=1;
+            Codehuffman[Etiq(huff)].code[0]=0;
+        }else ParcoursArbre(huff,0,code,tab,Codehuffman);
     }else printf("Fichier vide \n");
 }
 
-void AfficherCode(int nb,struct code_char HuffmanCode[]){
+void AfficherCode(int nb,struct code Codehuffman[]){
     for(int i=1;i<nb+1;i++){
         printf("Evenement %d: ",i);
-        for(int j=0;j<HuffmanCode[i].lg;j++){
-            printf("%d",HuffmanCode[i].code[j]);
+        for(int j=0;j<Codehuffman[i].longueur;j++){
+            printf("%d",Codehuffman[i].code[j]);
         }
         printf("\n");
     }
 }
 
 
-/*
-void AfficherCode_double(int nb,struct code_char HuffmanCode[]){
-    for(int i=0;i<nb;i++){
-        for(int j=0;j<nb;j++){
-            printf("Evenement %d,%d: ",i+1,j+1);
-            for(int h=0;h<HuffmanCode[1+i*nb+j].lg;h++){
-                printf("%d",HuffmanCode[1+i*nb+j].code[h]);
-            }
-            printf("\n");
-        }
-    }
-}
-*/
 
 
 
-void AfficherCode_n(int nb,int n,struct code_char HuffmanCode[]){
+void AfficherCode_n(int nb,int n,struct code Codehuffman[]){
     for(int i=0;i<(power(nb,n));i++){
         printf("Evenement");
         for(int j=n-1;0<=j;j--){  
             int index=((i)/power(nb,j))%nb;  
             printf(" %d ",index+1);        
         }
-        for(int h=0;h<HuffmanCode[1+i].lg;h++){
-                printf("%d",HuffmanCode[1+i].code[h]);
+        for(int h=0;h<Codehuffman[1+i].longueur;h++){
+                printf("%d",Codehuffman[1+i].code[h]);
             }
         printf("\n"); 
     }
 }
 
 
-float Longueur_moy(long int nb,struct code_char HuffmanCode[],float* tab,int m){
+float Longueur_moy(long int nb,struct code Codehuffman[],float* tab,int m){
     float res=0;
     for(int i=1;i<nb+1;i++){
-        res+=HuffmanCode[i].lg*tab[i-1];
+        res+=Codehuffman[i].longueur*tab[i-1];
     }
     printf("Longueur moyenne du code : %f \n",res);
     return res;
@@ -215,21 +177,21 @@ int main(int argc, char** argv){
     fap f;
     Arbre a;
     long int nb3=power(nb,m);
-    struct code_char HuffmanCode[nb3+1];
+    struct code Codehuffman[nb3+1];
   
-  
+    // Code Huffman de base 
     /*
     f= InitHuffman(tab,nb);
     a=ConstruireArbre(f);
-    ConstruireCode(a,tab,HuffmanCode);
-    AfficherCode(nb,HuffmanCode);
+    ConstruireCode(a,tab,Codehuffman);
+    AfficherCode(nb,Codehuffman);
     AfficherArbre(a);
-    Longueur_moy(nb,HuffmanCode,tab,1);
+    Longueur_moy(nb,Codehuffman,tab,1);
     LibererArbre(a);
     */
 
 
-
+   // Code Huffman avec double événement
    /*
     float tab2[nb*nb];
 
@@ -240,22 +202,19 @@ int main(int argc, char** argv){
     }
     f= InitHuffman(tab2,nb*nb);
     a=ConstruireArbre(f);
-    ConstruireCode(a,tab2,HuffmanCode);
-    AfficherCode_double(nb,HuffmanCode);
-    Longueur_moy(nb*nb,HuffmanCode,tab2,2);
+    ConstruireCode(a,tab2,Codehuffman);
+    AfficherCode_n(nb,2,Codehuffman);
+    Longueur_moy(nb*nb,Codehuffman,tab2,2);
     LibererArbre(a);
     */
 
 
     float* tab3=tab_mul(tab,m,nb);
-    float res5=0;
-    for(int i=0;i<power(nb,m);i++)res5+=tab3[i];
-    
     f= InitHuffman(tab3,nb3);
     a=ConstruireArbre(f);
-    ConstruireCode(a,tab3,HuffmanCode);
-    AfficherCode_n(nb,m,HuffmanCode);
-    Longueur_moy(nb3,HuffmanCode,tab3,m);
+    ConstruireCode(a,tab3,Codehuffman);
+    AfficherCode_n(nb,m,Codehuffman);
+    Longueur_moy(nb3,Codehuffman,tab3,m);
     
     LibererArbre(a);
     free(tab3);

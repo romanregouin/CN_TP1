@@ -1,7 +1,7 @@
 #ifndef __FAP_H__
 #define __FAP_H__
 
-#include "arbrebin.h"
+#include "arbre.h"
 
 struct maillon;
 

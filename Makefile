@@ -12,7 +12,7 @@ all: $(EXE)
 entropie : entropie.o
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 
-Huffman : Huffman.o fap.o arbrebin.o
+Huffman : Huffman.o fap.o arbre.o
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 arithmetic_encoding : arithmetic_encoding.o
