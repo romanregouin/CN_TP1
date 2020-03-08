@@ -5,6 +5,7 @@
 int main(int argc, char** argv){
     if(argc!=4){
         printf("Syntaxe : %s [nbletters] [message] [messageencoded]\n",argv[0]);
+        return EXIT_FAILURE;
     }
     int nb = atoi(argv[1]);
     double tobedecoded = atof(argv[3]);
@@ -111,7 +112,7 @@ double data_compression(char* msg, int nb, tabsymbole tab){
     double Vmsg = 1;
     double Vecart = Bsup - Binf;
     char letter = msg[i];
-    for(int i=1;i<nb;i++){
+    for(int i=1;i<=nb;i++){
         indice = find_pos_letter(tab,letter);
         Bsup = Binf + Vecart * tab.s[indice].interval[1];
         Binf = Binf + Vecart * tab.s[indice].interval[0];
@@ -134,7 +135,7 @@ char find_letter(double V, tabsymbole tab){
 char* data_decompression(double Vmsg, int nb, tabsymbole tab){
     char* msg = malloc(nb*sizeof(char));
     msg[0] = find_letter(Vmsg,tab);
-    for(int i=1;i<nb;i++){
+    for(int i=1;i<50;i++){
         int pos_letter = find_pos_letter(tab,msg[i-1]);
         Vmsg = (Vmsg - tab.s[pos_letter].interval[0])/tab.s[pos_letter].probability;
         msg[i] = find_letter(Vmsg,tab);
