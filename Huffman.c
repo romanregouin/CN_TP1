@@ -6,7 +6,7 @@
 
 struct code {
     int longueur;
-    int code[30]; /* ne contient que des 0 ou des 1 */
+    char code[30]; /* ne contient que des 0 ou des 1 */
 };
 
 
