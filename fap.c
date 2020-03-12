@@ -4,41 +4,33 @@
 
 fap creer_fap_vide() { return NULL; }
 
-fap inserer(fap f, Arbre element, float priorite) {
-    fap nouveau, courant, precedent;
+fap inserer(fap f, Arbre a, float priorite) {
+    fap new, courant, precedent;
 
-    /* nouveau maillon */
-    nouveau = (fap)malloc(sizeof(struct maillon));
-    nouveau->element = element;
-    nouveau->priorite = priorite;
-
-    /* insertion en tete */
+    new = (fap)malloc(sizeof(struct maillon));
+    new->a = a;
+    new->priorite = priorite;
     if ((f == NULL) || (priorite < f->priorite)) {
-        nouveau->prochain = f;
-        f = nouveau;
-    }
-
-    /* recherche de la bonne position et insertion */
-    else {
+        new->prochain = f;
+        f = new;
+    }else {
         precedent = f;
         courant = f->prochain;
-        while ((courant != NULL) && (priorite >= courant->priorite)) {
+        while ((courant != NULL) && ( courant->priorite <= priorite )) {
             precedent = courant;
             courant = courant->prochain;
         }
-        precedent->prochain = nouveau;
-        nouveau->prochain = courant;
+        precedent->prochain = new;
+        new->prochain = courant;
     }
     return f;
 }
 
-fap extraire(fap f, Arbre *element, float *priorite) {
+fap extraire(fap f, Arbre *a, float *priorite) {
     fap courant;
-
-    /* extraire le premier element si la fap n'est pas vide */
     if (f != NULL) {
         courant = f;
-        *element = courant->element;
+        *a = courant->a;
         *priorite = courant->priorite;
         f = courant->prochain;
         free(courant);
@@ -46,12 +38,12 @@ fap extraire(fap f, Arbre *element, float *priorite) {
     return f;
 }
 
-int est_fap_vide(fap f) { return f == NULL; }
+int est_fap_vide(fap f) {
+     return f == NULL; 
+}
 
 void detruire_fap(fap f) {
-    Arbre element;
+    Arbre a;
     float priorite;
-
-    while (!est_fap_vide(f))
-        f = extraire(f, &element, &priorite);
+    while (!est_fap_vide(f))f = extraire(f, &a, &priorite);
 }

@@ -6,9 +6,9 @@
 
 struct code {
     int longueur;
-    int code[30]; /* ne contient que des 0 ou des 1 */
+    int code1; 
+    int code2;
 };
-
 
 int power(int a,int n){
     if(n==1)return a;
@@ -18,7 +18,13 @@ int power(int a,int n){
 }
 
 
+int get_bit(int a,int pos){
+    return a & (1<<pos);
+}
 
+int set_bit(int a,int pos){
+    return a|(1<<pos);
+}
 
 
 fap InitHuffman(float* tab,long int nb) {
@@ -67,8 +73,13 @@ void ParcoursArbre(Arbre huff,int pos,int* code,float* tab,struct code Codehuffm
     Element e=Etiq(huff);
     if(e>0 && tab[e-1]>0 && pos!=0){
         Codehuffman[e].longueur=pos;
+        Codehuffman[e].code1=0;
+        Codehuffman[e].code2=0;
         for(int i=0;i<pos;i++){
-            Codehuffman[e].code[i]=code[i];
+            if(code[i]==1){
+                if(i<32)Codehuffman[e].code1=set_bit(Codehuffman[e].code1,i);
+                else Codehuffman[e].code2=set_bit(Codehuffman[e].code2,i);
+            }
         }
     }
 }
@@ -79,7 +90,7 @@ void ConstruireCode(Arbre huff,float* tab,struct code Codehuffman[]){
     if(huff!=NULL){
         if(EstVide(FilsGauche(huff)) && EstVide(FilsDroit(huff))){
             Codehuffman[Etiq(huff)].longueur=1;
-            Codehuffman[Etiq(huff)].code[0]=0;
+            Codehuffman[Etiq(huff)].code1=set_bit(0,0);
         }else ParcoursArbre(huff,0,code,tab,Codehuffman);
     }else printf("Fichier vide \n");
 }
@@ -88,7 +99,8 @@ void AfficherCode(int nb,struct code Codehuffman[]){
     for(int i=1;i<nb+1;i++){
         printf("Evenement %d: ",i);
         for(int j=0;j<Codehuffman[i].longueur;j++){
-            printf("%d",Codehuffman[i].code[j]);
+            if(get_bit(Codehuffman[i].code1,j))printf("1");
+            else printf("0");
         }
         printf("\n");
     }
@@ -106,7 +118,9 @@ void AfficherCode_n(int nb,int n,struct code Codehuffman[]){
             printf(" %d ",index+1);        
         }
         for(int h=0;h<Codehuffman[1+i].longueur;h++){
-                printf("%d",Codehuffman[1+i].code[h]);
+                if(h<32 && get_bit(Codehuffman[i+1].code1,h))printf("1");
+                else if(h>32 && get_bit(Codehuffman[i+1].code2,h-32))printf("1");
+                else printf("0");
             }
         printf("\n"); 
     }
@@ -218,5 +232,6 @@ int main(int argc, char** argv){
     
     LibererArbre(a);
     free(tab3);
+    fclose(src);
     return EXIT_SUCCESS;
 }
