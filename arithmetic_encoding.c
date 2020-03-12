@@ -135,7 +135,7 @@ char find_letter(double V, tabsymbole tab){
 char* data_decompression(double Vmsg, int nb, tabsymbole tab){
     char* msg = malloc(nb*sizeof(char));
     msg[0] = find_letter(Vmsg,tab);
-    for(int i=1;i<50;i++){
+    for(int i=1;i<nb;i++){
         int pos_letter = find_pos_letter(tab,msg[i-1]);
         Vmsg = (Vmsg - tab.s[pos_letter].interval[0])/tab.s[pos_letter].probability;
         msg[i] = find_letter(Vmsg,tab);
