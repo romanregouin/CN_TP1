@@ -18,6 +18,9 @@ int main(int argc, char** argv){
     printf("Le message décodé est : %s\n",msg);
     char* msgdecoded = data_decompression(tobedecoded,nb,tab);
     printf("Le message %lf décodé est : %s\n",tobedecoded,msgdecoded);
+    printf("Decodage version 2 :\n");
+    char* msg_V2 = data_decompression_V2(Vmsg,tab);
+    printf("Le message décodé (V2) est : %s\n",msg_V2);
     return EXIT_SUCCESS;
 }
 
@@ -133,12 +136,42 @@ char find_letter(double V, tabsymbole tab){
 }
 
 char* data_decompression(double Vmsg, int nb, tabsymbole tab){
+    double copie = Vmsg;
     char* msg = malloc(nb*sizeof(char));
-    msg[0] = find_letter(Vmsg,tab);
+    msg[0] = find_letter(copie,tab);
     for(int i=1;i<nb;i++){
+        int pos_letter = find_pos_letter(tab,msg[i-1]);
+        copie = (copie - tab.s[pos_letter].interval[0])/tab.s[pos_letter].probability;
+        msg[i] = find_letter(copie,tab);
+    }
+    return msg;
+}
+
+char* data_decompression_V2(double Vmsg, tabsymbole tab){
+    int indice;
+    double Binf = 0;
+    double Bsup = 1;
+    double Vecart = Bsup - Binf;
+    char letter;
+    double initial_Vmsg = Vmsg;
+    double tmp_Vmsg = 1;
+    double eps = 0.00005; //trop de precision conduit à des erreurs du aux nombreux calcul floattant
+    char* msg = malloc(100*sizeof(char)); //Ne support que des mot de max 100 lettres!
+    msg[0] = find_letter(Vmsg,tab);
+    letter = msg[0];
+    int i=1;
+    while(!((tmp_Vmsg-eps<initial_Vmsg)&&(tmp_Vmsg+eps>initial_Vmsg))){
         int pos_letter = find_pos_letter(tab,msg[i-1]);
         Vmsg = (Vmsg - tab.s[pos_letter].interval[0])/tab.s[pos_letter].probability;
         msg[i] = find_letter(Vmsg,tab);
+
+        indice = find_pos_letter(tab,letter);
+        Bsup = Binf + Vecart * tab.s[indice].interval[1];
+        Binf = Binf + Vecart * tab.s[indice].interval[0];
+        tmp_Vmsg = (Bsup + Binf)/(double)2;
+        Vecart = Bsup - Binf;
+        letter = msg[i];
+        i++;
     }
     return msg;
 }
