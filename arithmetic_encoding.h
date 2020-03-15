@@ -24,3 +24,5 @@ double data_compression(char* msg, int nb, tabsymbole tab);
 char* data_decompression(double Vmsg, int nb, tabsymbole tab);
 
 char find_letter(double V, tabsymbole tab);
+
+char* data_decompression_V2(double Vmsg, tabsymbole tab);
